@@ -8,5 +8,10 @@
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
     "outDir": "./dist",
     "baseUrl": "./src"
-  }
+  },
+  "include": ["src/**/*", "**/*.ts", "**/*.tsx"],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
 }
