@@ -1,16 +1,16 @@
-const user = {
-    email: String,
-    name: String,
-    password: String
+interface user {
+  email?: string
+  name?: string
+  password?: string
 }
 interface UserBody {
-    email: string;
-    name?: string;
-    token: string;
+  email: string
+  name?: string
+  token: string
 }
 interface UserData {
-    code: string,
-    message: string,
-    body: UserBody | undefined;
+  code: string
+  message: string
+  body: UserBody | undefined
 }
-export { user, UserData,  UserBody }
+export { user, UserData, UserBody }
