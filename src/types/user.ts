@@ -11,6 +11,6 @@ interface UserBody {
 interface UserData {
   code: string
   message: string
-  body: UserBody | undefined
+  body: UserBody | undefined | boolean
 }
 export { user, UserData, UserBody }

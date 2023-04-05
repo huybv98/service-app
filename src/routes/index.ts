@@ -1,5 +1,5 @@
 import express from 'express'
-import AuthController from '../controllers/AuthenticationController'
+import AuthController from '@src/controllers/AuthenticationController'
 const router = express.Router()
 
 const initWebRoutes = (app: express.Application) => {

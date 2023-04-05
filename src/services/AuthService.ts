@@ -1,28 +1,31 @@
-import User from '../models/user'
+import User from '@src/models/user'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { UserData } from '../types/user'
+import { UserData } from '@src/types/user'
+import codeApi from '@src/constants/code'
 
 const handleUserLogin = (email: string, password: string) => {
   return new Promise(async (resolve, reject) => {
     try {
       const userData: UserData = {
-        code: '0',
+        code: codeApi.CODE_OK,
         message: '',
         body: undefined,
       }
       const isExist = await checkUserEmail(email)
       if (!isExist) {
-        userData.code = '401'
+        userData.code = codeApi.CODE_FAIL
         userData.message = `Email hoặc mật khẩu không đúng.`
+        return
       }
       const user = await User.findOne({ email: email }, { email: 1, password: 1, _id: 1, name: 1 })
       if (user) {
         const hash = await handleHashPassword(password)
         const check = bcrypt.compareSync(password, hash)
         if (!check) {
-          userData.code = '401'
+          userData.code = codeApi.CODE_FAIL
           userData.message = `Email hoặc mật khẩu không đúng.`
+          return
         } else {
           const payload = {
             user: {
@@ -31,7 +34,7 @@ const handleUserLogin = (email: string, password: string) => {
           }
 
           const token: string = jwt.sign(payload, process.env.SERVICE_APP_JWT_SECRET!) || ''
-          userData.code = '200'
+          userData.code = codeApi.CODE_OK
           userData.message = `Đăng nhập thành công`
           userData.body = {
             email: user.email,
@@ -40,7 +43,7 @@ const handleUserLogin = (email: string, password: string) => {
           }
         }
       } else {
-        userData.code = '401'
+        userData.code = codeApi.CODE_FAIL
         userData.message = `Email hoặc mật khẩu không đúng.`
       }
       resolve(userData)
@@ -53,16 +56,17 @@ const handleUserLogin = (email: string, password: string) => {
 const handleUserRegister = (name: string, email: string, password: string) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const userData = {
-        code: '0',
+      const userData: UserData = {
+        code: codeApi.CODE_OK,
         message: '',
         body: undefined,
       }
       const isExist = await checkUserEmail(email)
       if (isExist) {
-        userData.code = '400'
+        userData.code = codeApi.CODE_FAIL
         userData.message = `Email đã được đăng ký`
         resolve(userData)
+        return
       }
       // hash password
       password = await handleHashPassword(password)
@@ -75,12 +79,13 @@ const handleUserRegister = (name: string, email: string, password: string) => {
       await user
         .save()
         .then(() => {
-          userData.code = '200'
+          userData.code = codeApi.CODE_OK
           userData.message = `Đăng ký thành công`
+          userData.body = true
         })
         .catch((error) => {
           console.log('Error saving user', error)
-          userData.code = '400'
+          userData.code = codeApi.CODE_FAIL
           userData.message = `Đăng ký thất bại`
         })
       resolve(userData)
