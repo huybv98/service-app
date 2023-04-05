@@ -7,11 +7,20 @@
     "strict": true,                                      /* Enable all strict type-checking options. */
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
     "outDir": "./dist",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "paths": {
+      "@src/*": ["*"]
+    }
   },
   "include": ["src/**/*", "**/*.ts", "**/*.tsx"],
   "exclude": [
     "node_modules",
     "**/*.spec.ts"
+  ],
+  "plugins": [
+    {
+      "name": "typescript-tsc-paths",
+      "basePath": "."
+    }
   ]
 }
