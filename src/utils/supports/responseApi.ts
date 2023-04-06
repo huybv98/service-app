@@ -10,11 +10,15 @@ const respond = (
   data = null,
   httpCode: number = StatusCodes.OK
 ) => {
-  return res.status(httpCode).json({
+  const resBody = {
     code: code,
     message: message || getReasonPhrase(httpCode),
-    body: data,
-  })
+    body: undefined
+  }
+  if (data) {
+    resBody.body = data
+  }
+  return res.status(httpCode).json(resBody)
 }
 
 const responseFail = (res: Response, message: string = messageApi.CODE_FAIL, data = null) => {

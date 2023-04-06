@@ -23,17 +23,6 @@ const initWebRoutes = (app: express.Application) => {
    *     description: Đăng nhập bằng tài khoản và mật khẩu
    *     tags:
    *       - Auth
-   *     parameters:
-   *       - name: email
-   *         description: User's email
-   *         in: formData
-   *         required: true
-   *         type: string
-   *       - name: password
-   *         description: User's password
-   *         in: formData
-   *         required: true
-   *         type: string
    *     requestBody:
    *       required: true
    *       content:
@@ -55,9 +44,24 @@ const initWebRoutes = (app: express.Application) => {
    *             schema:
    *               type: object
    *               properties:
-   *                 token:
+   *                 code:
    *                   type: string
-   *                   description: JWT token
+   *                   description: API000
+   *                 message:
+   *                   type: string
+   *                   description: SUCCESS
+   *                 body:
+   *                   type: object
+   *                   properties:
+   *                       token:
+   *                         type: string
+   *                         description: JWT token
+   *                       name:
+   *                         type: string
+   *                         description: Tên đăng nhập
+   *                       email:
+   *                         type: string
+   *                         description: Địa chỉ email
    *       '400':
    *         description: Đăng nhập thất bại
    *         content:
@@ -65,6 +69,9 @@ const initWebRoutes = (app: express.Application) => {
    *             schema:
    *               type: object
    *               properties:
+   *                 code:
+   *                   type: string
+   *                   description: API000
    *                 message:
    *                   type: string
    *                   description: Lỗi đăng nhập
@@ -75,9 +82,29 @@ const initWebRoutes = (app: express.Application) => {
    *             schema:
    *               type: object
    *               properties:
+   *                 code:
+   *                   type: string
+   *                   description: API000
    *                 message:
    *                   type: string
    *                   description: Lỗi server
+   * definitions:
+   *   User:
+   *     type: object
+   *     properties:
+   *       name:
+   *         type: string
+   *       email:
+   *         type: string
+   *       password:
+   *         type: string
+   *   Error:
+   *     type: object
+   *     properties:
+   *       message:
+   *         type: string
+   *       code:
+   *         type: integer
    */
   router.post('/auth/login', AuthController.handleLogin)
 
@@ -91,35 +118,64 @@ const initWebRoutes = (app: express.Application) => {
    *       - Auth
    *     produces:
    *       - application/json
-   *     parameters:
-   *       - name: name
-   *         description: User's name
-   *         in: formData
-   *         required: true
-   *         type: string
-   *       - name: email
-   *         description: User's email
-   *         in: formData
-   *         required: true
-   *         type: string
-   *       - name: password
-   *         description: User's password
-   *         in: formData
-   *         required: true
-   *         type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               email:
+   *                 type: string
+   *                 description: Địa chỉ email
+   *               password:
+   *                 type: string
+   *                 description: Mật khẩu
+   *               name:
+   *                 type: string
+   *                 description: tên đăng nhập
    *     responses:
    *       200:
    *         description: User created successfully
-   *         schema:
-   *           $ref: '#/definitions/User'
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 code:
+   *                   type: string
+   *                   description: API000
+   *                 message:
+   *                   type: string
+   *                   description: SUCCESS
+   *                 body:
+   *                   type: boolean
    *       400:
    *         description: Bad request
-   *         schema:
-   *           $ref: '#/definitions/Error'
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 code:
+   *                   type: string
+   *                   description: API000
+   *                 message:
+   *                   type: string
+   *                   description: Lỗi đăng nhập
    *       500:
    *         description: Internal server error
-   *         schema:
-   *           $ref: '#/definitions/Error'
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 code:
+   *                   type: string
+   *                   description: API000
+   *                 message:
+   *                   type: string
+   *                   description: Lỗi server
    * definitions:
    *   User:
    *     type: object

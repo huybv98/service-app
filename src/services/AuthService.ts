@@ -16,6 +16,7 @@ const handleUserLogin = (email: string, password: string) => {
       if (!isExist) {
         userData.code = codeApi.CODE_FAIL
         userData.message = `Email hoặc mật khẩu không đúng.`
+        resolve(userData)
         return
       }
       const user = await User.findOne({ email: email }, { email: 1, password: 1, _id: 1, name: 1 })
@@ -25,7 +26,7 @@ const handleUserLogin = (email: string, password: string) => {
         if (!check) {
           userData.code = codeApi.CODE_FAIL
           userData.message = `Email hoặc mật khẩu không đúng.`
-          return
+          resolve(userData)
         } else {
           const payload = {
             user: {
