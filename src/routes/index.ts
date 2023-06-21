@@ -195,6 +195,11 @@ const initWebRoutes = (app: express.Application) => {
    *         type: integer
    */
   router.post('/auth/register', AuthController.handleRegister)
+  router.get('/endpoint', (req, res) => {
+    const clientIP = req.ip;
+    console.log(req);
+    res.send('Địa chỉ IP của client: ' + req);
+  });
 
   return app.use('/', router)
 }
